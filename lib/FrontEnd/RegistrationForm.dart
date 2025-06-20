@@ -11,9 +11,24 @@ class _RegistrationFormState extends State<RegistrationForm> {
   String firstName = '';
   String lastName = '';
   String email = '';
-  String employee = '';
-  String paymentPeriod = '';
-  String location = '';
+  String selectedEmployee = 'Employee';
+  List<String> employeeList = <String>['Employee'];
+
+  String selectedPaymentPeriod = 'Select Payment Period';
+  List<String> paymentList = <String>[
+    'Select Payment Period',
+    'Weekly',
+    'Semi-Monthly',
+  ];
+
+  String selectedLocation = 'Select Office Location';
+  List<String> locationList = <String>[
+    'Select Office Location',
+    'Cebu, PH',
+    'Chicago, US',
+    'LoS Angeles, US',
+    'Manila, PH',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -41,37 +56,105 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 validatorMsg: 'Please enter email',
                 keyboardType: TextInputType.emailAddress,
               ),
-              buildTextFormField(
-                label: 'Employee',
-                onSaved: (value) => employee = value ?? '',
-                validatorMsg: 'Please enter employee',
+
+              // Employee Dropdown
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: DropdownButtonFormField<String>(
+                  value: selectedEmployee,
+                  items: employeeList.map((String employee) {
+                    return DropdownMenuItem<String>(
+                      value: employee,
+                      child: Text(employee),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedEmployee = newValue!;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Select Employee',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
               ),
-              buildTextFormField(
-                label: 'Payment Period',
-                onSaved: (value) => paymentPeriod = value ?? '',
-                validatorMsg: 'Please enter payment period',
+
+              // Payment Period Dropdown
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: DropdownButtonFormField<String>(
+                  value: selectedPaymentPeriod,
+                  items: paymentList.map((String period) {
+                    return DropdownMenuItem<String>(
+                      value: period,
+                      child: Text(period),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedPaymentPeriod = newValue!;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Select Payment Period',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == 'Select Payment Period') {
+                      return 'Please select a payment period';
+                    }
+                    return null;
+                  },
+                ),
               ),
-              buildTextFormField(
-                label: 'Location',
-                onSaved: (value) => location = value ?? '',
-                validatorMsg: 'Please enter location',
+
+              // Location Dropdown
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: DropdownButtonFormField<String>(
+                  value: selectedLocation,
+                  items: locationList.map((String location) {
+                    return DropdownMenuItem<String>(
+                      value: location,
+                      child: Text(location),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedLocation = newValue!;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Select Office Location',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == 'Select Office Location') {
+                      return 'Please select a location';
+                    }
+                    return null;
+                  },
+                ),
               ),
+
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    // Now you have all values, do something with them
                     print('First Name: $firstName');
                     print('Last Name: $lastName');
                     print('Email: $email');
-                    print('Employee: $employee');
-                    print('Payment Period: $paymentPeriod');
-                    print('Location: $location');
+                    print('Employee: $selectedEmployee');
+                    print('Payment Period: $selectedPaymentPeriod');
+                    print('Location: $selectedLocation');
                   }
                 },
-                child: Text('Submit'),
+                child: Text('Continue'),
               ),
+              SizedBox(height: 10),
+              Center(child: Text('Already have an account? Sign in')),
             ],
           ),
         ),
