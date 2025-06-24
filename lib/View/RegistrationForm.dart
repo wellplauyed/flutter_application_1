@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
-import '../controllers/registration_controller.dart';
+import 'AccountSetupForm.dart'; // ✅ Correct import for Step 2
 
 class RegistrationForm extends StatefulWidget {
   @override
@@ -9,7 +9,6 @@ class RegistrationForm extends StatefulWidget {
 
 class _RegistrationFormState extends State<RegistrationForm> {
   final _formKey = GlobalKey<FormState>();
-  final RegistrationController _controller = RegistrationController();
 
   String firstName = '';
   String lastName = '';
@@ -29,7 +28,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     'Select Office Location',
     'Cebu, PH',
     'Chicago, US',
-    'LoS Angeles, US',
+    'Los Angeles, US',
     'Manila, PH',
   ];
 
@@ -108,7 +107,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     );
   }
 
-  // 👇 Handle form submit and send data to controller
+  // ✅ Handle form validation & move to Step 2
   Future<void> handleSubmit() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -122,19 +121,15 @@ class _RegistrationFormState extends State<RegistrationForm> {
         officeLocation: selectedLocation,
       );
 
-      final response = await _controller.submitRegistration(user);
-
-      // ✅ Show SnackBar based on result
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response['message']),
-          backgroundColor: response['status'] ? Colors.green : Colors.red,
-        ),
+      // ✅ Navigate to Account Setup screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AccountSetupForm(user: user)),
       );
     }
   }
 
-  // 👇 Reusable dropdown widget
+  // 👇 Reusable Dropdown Widget
   Widget buildDropdown({
     required String label,
     required String value,
@@ -159,7 +154,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     );
   }
 
-  // 👇 Reusable text field widget
+  // 👇 Reusable TextFormField Widget
   Widget buildTextFormField({
     required String label,
     required FormFieldSetter<String> onSaved,
