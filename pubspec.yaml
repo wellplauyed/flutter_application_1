@@ -22,14 +22,14 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/group_logo_foreground.png
+    - assets/group_logo_round1.png
 
 flutter_launcher_icons:
   android: true
   ios: false
-  image_path: "assets/group_logo_foreground.png"
+  image_path: "assets/group_logo_round1.png"
   image_adaptive_icon_background: "#044663"
-  image_adaptive_icon_foreground: "assets/group_logo_foreground.png"
+  image_adaptive_icon_foreground: "assets/group_logo_round1.png"
   remove_alpha_ios: true
 
 
