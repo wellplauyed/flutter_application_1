@@ -4,7 +4,7 @@ import '../models/user_model.dart';
 class AccountSetupForm extends StatefulWidget {
   final User user;
 
-  AccountSetupForm({required this.user});
+  const AccountSetupForm({super.key, required this.user});
 
   @override
   State<AccountSetupForm> createState() => _AccountSetupFormState();

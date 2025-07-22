@@ -3,6 +3,8 @@ import '../models/user_model.dart';
 import 'AccountSetupForm.dart'; // ✅ Correct import for Step 2
 
 class RegistrationForm extends StatefulWidget {
+  const RegistrationForm({super.key});
+
   @override
   State<RegistrationForm> createState() => _RegistrationFormState();
 }
