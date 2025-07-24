@@ -1,34 +1,56 @@
 import 'package:flutter/material.dart';
+import '../View/RegistrationForm.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
 
   @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool _obscureText = true;
+
+  @override
+  void dispose() {
+    usernameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final fieldWidth = screenWidth * 0.9;
+    final buttonWidth = screenWidth * 0.8;
+
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          // 🔼 LOGO at the top center
-          // You can adjust the logo's vertical position by changing `top: 80`
-          // Example: top: 50 moves it up, top: 120 moves it down
+          // 🔼 App Logo (Responsive height & top padding)
           Positioned(
-            top: 180, // 🔧 ADJUST THIS to move logo up or down
+            top: screenHeight * 0.12,
             left: 0,
             right: 0,
             child: Center(
-              child: Image.asset('assets/group_logo_round1.png', height: 120),
+              child: Image.asset(
+                'assets/group_logo_round1.png',
+                height: screenHeight * 0.15,
+              ),
             ),
           ),
 
-          // 🟪 CENTER TEXT ("Welcome to Eportal")
-          // To move the text up/down, adjust `top` padding inside `Padding(...)`
+          // 🟪 Main UI
           Align(
             alignment: Alignment.center,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     'Welcome to Eportal',
@@ -41,53 +63,115 @@ class WelcomeScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyLarge,
                     textAlign: TextAlign.center,
                   ),
+                  SizedBox(height: screenHeight * 0.05),
+
+                  // Username Field
+                  SizedBox(
+                    width: fieldWidth,
+                    child: TextField(
+                      controller: usernameController,
+                      decoration: _buildInputDecoration('Username'),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Password Field
+                  SizedBox(
+                    width: fieldWidth,
+                    child: TextField(
+                      controller: passwordController,
+                      obscureText: _obscureText,
+                      decoration: _buildInputDecoration(
+                        'Password',
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(height: screenHeight * 0.03),
+                  SizedBox(
+                    width: buttonWidth,
+                    height: 45,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        final username = usernameController.text;
+                        final password = passwordController.text;
+                        // TODO: Handle login
+                      },
+                      child: const Text('Login'),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // TODO: Forgot password
+                    },
+                    child: const Text('Forgot Password?'),
+                  ),
                 ],
               ),
             ),
           ),
-          // 🔽 BUTTONS at the bottom center
-          // To move the buttons up or down, adjust `bottom: 100`
+
+          // 🔻 Bottom Create Account Button (Responsive)
           Positioned(
-            bottom: 100, // 🔧 ADJUST THIS to move buttons higher or lower
+            bottom: screenHeight * 0.07,
             left: 0,
             right: 0,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  width: 300,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // navigate to create account screen
-                    },
-                    child: const Text('Create Account'),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: 300,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Color(0xFF6F4DC6),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: BorderSide(color: Color(0xFF70548F), width: 2),
+            child: Center(
+              child: SizedBox(
+                width: buttonWidth,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RegistrationForm(),
                       ),
-                    ),
-                    onPressed: () {
-                      // navigate to login screen
-                    },
-                    child: const Text('Sign In'),
-                  ),
+                    );
+                  },
+                  child: const Text('Create Account'),
                 ),
-              ],
+              ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  /// 🔧 Reusable input decoration
+  InputDecoration _buildInputDecoration(String label, {Widget? suffixIcon}) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: TextStyle(color: Colors.grey[700]),
+      filled: true,
+      fillColor: Colors.grey[100],
+      contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade400),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade400),
+      ),
+      focusedBorder: const OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderSide: BorderSide(color: Color(0xFF6F4DC6), width: 2),
+      ),
+      suffixIcon: suffixIcon,
     );
   }
 }
